@@ -97,6 +97,13 @@ while True:
                         print('found url ' + url)
                         open_url(url)
                         break
+        elif 'spell' in query:
+            word = query.split('spell')
+            word = word[1][1:]
+            characters = list(word)
+            characters = ' '.join(characters)
+            print(f'{word} is spelled {characters}')
+            speak(f'{word} is spelled {characters}')
         elif "what time" in query:
             hour = int(datetime.now().hour)
             minutes = int(datetime.now().minute)

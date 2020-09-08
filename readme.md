@@ -14,6 +14,8 @@ You need to include jarvis in every command so jarvis knows you want it to do so
 - volume mute > mutes volume
 - volume unmute > unmutes volume
 - shut down > shuts down jarvis
+- spell "xyz" > "xyz is spelled x y z"
+- wolframalpha "weather"> returns the current weather or whatever you ask.
 
 
 # config.py
@@ -22,6 +24,9 @@ MASTER = 'Austin'
 
 # text to speech
 tts_voice_rate = 145
+
+# wolframalpha
+WOLF_APPID = 'YourAppID'
 ```
 
 
@@ -32,7 +37,9 @@ tts_voice_rate = 145
 - [x] add command jarvis google xyz
 - [x] add command jarvis youtube xyz
 - [ ] add the ability to automatically login to websites. This will use Selenium and the auto install libraries for chrome/firefox drivers. Will need to create a class or set of functions that will allow me to setup multiple different logins with out hard coding each one. For example it would take input that tells the funtion where the xpath for the login form, username/email field, password field, submit button, etc is located. This configuration should all be in the config.py file.
-- [ ] add ability to search wolframalpha
+- [x] add ability to search wolframalpha
 - [ ] add an ability to do a general search where jarvis will find a result from either, wolframalpha, wikipedia, or google to answer your question.
 - [x] jarvis how do you spell "xyz" > output "you spell xyz like: x y z"
 - [ ] create a ui/visual that responds to voice input and that reacts to jarvis speaking. kind of like a spectrum analyzer
+- [ ] add ability to send emails
+- [ ] add ability to send text messages. this would use the text via email functionality. like sending an email to 1234567890@tmobile.com will send a text message to the phone number.

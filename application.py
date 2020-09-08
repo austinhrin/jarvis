@@ -1,23 +1,25 @@
-# preinstalled python dependancies
+### preinstalled python dependancies
 from datetime import datetime
 import re
 #import smtplib # will allow you to send emails
 
-# pip installed dependancies
-#import wolframalpha
+### pip installed dependancies
+import wolframalpha
 import wikipedia
 import pyttsx3
 import speech_recognition as sr
 #import geckodriver_autoinstaller #https://pypi.org/project/geckodriver-autoinstaller/
 #import chromedriver_autoinstaller #https://pypi.org/project/chromedriver-autoinstaller/
 
-# user created dependancies
-from config import MASTER, tts_voice_rate
+### user created dependancies
+from config import MASTER, tts_voice_rate, WOLF_APPID
 from modules.open import open_url
 from modules import volume
 
-# initial variables
-#wolf = wolframalpha.Client("")
+### initial variables
+# wolframalpha
+wolf = wolframalpha.Client(WOLF_APPID)
+
 # text to speech
 tts = pyttsx3.init('sapi5')
 voices = tts.getProperty('voices')
@@ -80,6 +82,11 @@ while True:
         # when user asks Jarvis a question then run if checks
         if 'hello jarvis' in query:
             greet_master()
+        elif 'search' in query:
+            # try search wolframalpha
+            # then wikipedia
+            # else search google
+            print('not available yet.')
         elif 'google' in query:
             head, sep, tail = query.partition('google')
             speak(f'Searching Google for {tail}')
@@ -88,6 +95,15 @@ while True:
             head, sep, tail = query.partition('youtube')
             speak(f'Searching YouTube for {tail}')
             open_url(f'youtube.com/results?search_query={tail}')
+        elif 'wolfram alpha' in query or 'wolframalpha' in query:
+            # search wolframalpha
+            if 'wolfram alpha' in query:
+                head, sep, tail = query.partition('wolfram alpha')
+            elif 'wolframalpha' in query:
+                head, sep, tail = query.partition('wolframalpha')
+            wolfram_response = next(wolf.query(tail).results).text
+            print(wolfram_response)
+            speak(wolfram_response)
         elif 'open' in query:
             if '.com' in query:
                 query_pieces = query.split(' ')

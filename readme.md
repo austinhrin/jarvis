@@ -18,6 +18,9 @@ You need to include jarvis in every command so jarvis knows you want it to do so
 - wolframalpha "weather"> returns the current weather or whatever you ask.
 - search "xyz" OR what is "xyz" > will speak the search result if found by Wolfram Alpha or Wikipedia. If not found will open Google.
 - login to "github" > uses selenium to log you into github or any website you specify as log as it is in the config.py file.
+- start timer X hours X minutes X seconds > starts a timer for specified time
+- 
+
 
 # config.py
 ```
@@ -72,9 +75,10 @@ login = [
 - [ ] play "song name" using spotify api spotipy
 - [ ] create a to do list. Jarvis can run CRUD operations against the to do list.
 - [ ] ability to have multiple to do lists.
-- [ ] countdown timer
+- [x] countdown timer
 - [ ] alarm clock
 - [ ] turn into a kivy application so Jarvis can be mobile!
 - [ ] create a ui/visual that responds to voice input and that reacts to jarvis speaking. kind of like a spectrum analyzer
 - [ ] figure out how to monetize the kivy mobile application. text ads, video ads, audio ads???
 - [ ] analytics for mobile app???
+- [ ] create automated tests that will test all the commands?

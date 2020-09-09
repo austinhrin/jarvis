@@ -8,9 +8,9 @@ import pyttsx3
 import speech_recognition as sr
 
 ### user created dependancies
-from config import MASTER, tts_voice_rate
+from config import MASTER, JARVIS,tts_voice_rate
 from modules.open import open_url, auto_login
-from modules import volume, search, helpers
+from modules import volume, search, helpers, time
 
 
 # text to speech
@@ -19,6 +19,7 @@ voices = tts.getProperty('voices')
 tts.setProperty('voice', voices[0].id)
 tts.setProperty('rate',tts_voice_rate)
 
+JARVIS = JARVIS.lower()
 
 def speak(text):
     tts.say(text)
@@ -61,10 +62,14 @@ def sendEmail(to, content):
 
 
 # main program
-print('Initializing Jarvis...')
-speak('Initializing Jarvis...')
+print(f'Initializing {JARVIS}...')
+speak(f'Initializing {JARVIS}...')
 greet_master()
-speak('I am Jarvis. How may I help you today?')
+speak(f'I am {JARVIS}. How may I help you today?')
+
+
+timer_time = 0
+timer_duration = 0
 
 while True:
     # wait for user to speak and say Jarvis... xyz
@@ -73,9 +78,9 @@ while True:
         # convert what is said to lowercase
         # to make life with if statements easier
         query = query.lower()
-    if query != None and 'jarvis' in query:
+    if query != None and JARVIS in query:
         # when user asks Jarvis a question then run if checks
-        if 'hello jarvis' in query:
+        if f'hello {JARVIS}' in query:
             greet_master()
         elif 'search' in query or 'what is' in query:
             # remove name of command and get search term
@@ -163,6 +168,24 @@ while True:
                 hour = hour - 12
 
             speak(f'It is currently {hour} {minutes} {am_pm}')
+        elif 'start timer for' in query:
+            if timer_duration != 0:
+                speak(f'There is already a timer. If you want to cancel the current timer say "stop timer".')
+            else:
+                timer_time = datetime.now()
+                string_with_time = helpers.string_after(query, 'start timer for')
+                # set the timer
+                timer_duration = time.get_time_from_string(string_with_time)
+                hour, minutes, seconds = timer_duration.split(':')
+                speak(f'Timer started for {hour} hours {minutes} minutes and {seconds} seconds')
+        elif 'time left on timer' in query:
+            time_left = time.check_time_elapsed(timer_time, timer_duration)
+            hour, minutes, seconds = time_left.split(':')
+            speak(f'Your timer has {hour} hours {minutes} minutes and {seconds} seconds left.')
+        elif 'stop timer' in query:
+            speak(f'Timer stopped!')
+            timer_time = 0
+            timer_duration = 0
         elif 'volume' in query:
             if '%' in query:
                 percent = int(re.search(r'\d+', query).group())
@@ -188,3 +211,12 @@ while True:
         elif 'shut down' in query:
             speak(f'Shutting down... Good bye {MASTER}.')
             break
+    # check if there is a timer
+    if timer_duration != 0:
+        done = time.check_time_elapsed(timer_time, timer_duration)
+        #print(done)
+        if done == True:
+            hour, minutes, seconds = timer_duration.split(':')
+            speak(f'Your timer for {hour} hours {minutes} minutes and {seconds} seconds is up!')
+            timer_time = 0
+            timer_duration = 0

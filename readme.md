@@ -19,12 +19,14 @@ You need to include jarvis in every command so jarvis knows you want it to do so
 - search "xyz" OR what is "xyz" > will speak the search result if found by Wolfram Alpha or Wikipedia. If not found will open Google.
 - login to "github" > uses selenium to log you into github or any website you specify as log as it is in the config.py file.
 - start timer X hours X minutes X seconds > starts a timer for specified time
-- 
+- time left on timer > gives you the amount of time left on your timer
+- stop timer > stops your current timer
 
 
 # config.py
 ```
 MASTER = 'Austin'
+JARVIS = 'python'
 
 # text to speech
 tts_voice_rate = 145

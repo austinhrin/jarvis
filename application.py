@@ -4,21 +4,16 @@ import re
 #import smtplib # will allow you to send emails
 
 ### pip installed dependancies
-import wolframalpha
-import wikipedia
 import pyttsx3
 import speech_recognition as sr
 #import geckodriver_autoinstaller #https://pypi.org/project/geckodriver-autoinstaller/
 #import chromedriver_autoinstaller #https://pypi.org/project/chromedriver-autoinstaller/
 
 ### user created dependancies
-from config import MASTER, tts_voice_rate, WOLF_APPID
+from config import MASTER, tts_voice_rate
 from modules.open import open_url
-from modules import volume
+from modules import volume, search
 
-### initial variables
-# wolframalpha
-wolf = wolframalpha.Client(WOLF_APPID)
 
 # text to speech
 tts = pyttsx3.init('sapi5')
@@ -82,10 +77,23 @@ while True:
         # when user asks Jarvis a question then run if checks
         if 'hello jarvis' in query:
             greet_master()
-        elif 'search' in query:
+        elif 'search' in query or 'what is' in query:
+            head, sep, tail = query.partition('search')
             # try search wolframalpha
-            # then wikipedia
-            # else search google
+            wolf_response = search.wolf(tail)
+            if 'could not find' in wolf_response:
+                # then wikipedia
+                wiki_response = search.wiki(tail)
+                if 'could not find' in wiki_response:
+                    # else search google
+                    speak(f'Could not find {tail} on Wolfram Alpha or Wikipedia opening Google.')
+                    open_url(f'google.com/search?q={tail}')
+                else:
+                    print(wiki_response)
+                    speak(wiki_response)
+            else:
+                print(wolf_response)
+                speak(wolf_response)
             print('not available yet.')
         elif 'google' in query:
             head, sep, tail = query.partition('google')
@@ -101,9 +109,14 @@ while True:
                 head, sep, tail = query.partition('wolfram alpha')
             elif 'wolframalpha' in query:
                 head, sep, tail = query.partition('wolframalpha')
-            wolfram_response = next(wolf.query(tail).results).text
-            print(wolfram_response)
-            speak(wolfram_response)
+            response = search.wolf(tail)
+            print(response)
+            speak(response)
+        elif 'wikipedia' in query:
+            head, sep, tail = query.partition('wikipedia')
+            response = search.wiki(tail)
+            print(response)
+            speak(response)
         elif 'open' in query:
             if '.com' in query:
                 query_pieces = query.split(' ')

@@ -103,7 +103,11 @@ while True:
             elif 'log into' in query:
                 search_term = helpers.string_after(query, 'log into')
             # open and login to the website
-            auto_login(search_term)
+            login = auto_login(search_term)
+            if login == True:
+                speak(f'Logged into {search_term}')
+            else:
+                speak(f'Was not able to login to {search_term}')
         elif 'google' in query:
             # remove name of command and get search term
             search_term = helpers.string_after(query, 'google')

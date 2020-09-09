@@ -23,25 +23,31 @@ def open_url(url):
     webbrowser.get().open_new_tab(url)
 
 def auto_login(name):
+    found = False
     for website in login:
         if name.lower() in website['website'].lower():
-            print(f"found {name} url is {website['website']}")
-            if selenium_browser == 'chrome':
-                chrome_options = coptions()
-                chrome_options.add_experimental_option("detach", True)
-                driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=chrome_options)
-            elif selenium_browser == 'firefox':
-                #firefox_options = foptions()
-                #firefox_options.add_experimental_option("detach", True)
-                driver = webdriver.Firefox(executable_path=GeckoDriverManager().install())
-            driver.get(website['website'])
-            # wait for website to open
-            sleep(2*random.uniform(1, 3))
-            for command in website['selenium_commands']:
-                if command['type'] == 'input':
-                    input_field = driver.find_element_by_xpath(command['xpath'])
-                    input_field.send_keys(website[command['input_variable']])
-                elif command['type'] == 'button':
-                    button = driver.find_element_by_xpath(command['xpath'])
-                    button.click()
-            #driver.close()
+            found = True
+            #print(f"found {name} url is {website['website']}")
+            try:
+                if selenium_browser == 'chrome':
+                    chrome_options = coptions()
+                    chrome_options.add_experimental_option("detach", True)
+                    driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=chrome_options)
+                elif selenium_browser == 'firefox':
+                    #firefox_options = foptions()
+                    #firefox_options.add_experimental_option("detach", True)
+                    driver = webdriver.Firefox(executable_path=GeckoDriverManager().install())
+                driver.get(website['website'])
+                # wait for website to open
+                sleep(4)
+                for command in website['selenium_commands']:
+                    if command['type'] == 'input':
+                        input_field = driver.find_element_by_xpath(command['xpath'])
+                        input_field.send_keys(website[command['input_variable']])
+                    elif command['type'] == 'button':
+                        button = driver.find_element_by_xpath(command['xpath'])
+                        button.click()
+                #driver.close()
+            except:
+                found = 'Error'
+    return found

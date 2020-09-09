@@ -17,7 +17,7 @@ You need to include jarvis in every command so jarvis knows you want it to do so
 - spell "xyz" > "xyz is spelled x y z"
 - wolframalpha "weather"> returns the current weather or whatever you ask.
 - search "xyz" OR what is "xyz" > will speak the search result if found by Wolfram Alpha or Wikipedia. If not found will open Google.
-
+- login to "github" > uses selenium to log you into github or any website you specify as log as it is in the config.py file.
 
 # config.py
 ```
@@ -28,6 +28,32 @@ tts_voice_rate = 145
 
 # wolframalpha
 WOLF_APPID = 'YourAppID'
+
+# this allows you to specify a login and selenium commands to automatically log you into a website
+# since it is a list you can have multiple different logins setup at once!
+login = [
+    {
+        'website': 'https://github.com/login',
+        'username': '',
+        'password': '',
+        'selenium_commands': [
+            {
+                'type': 'input',
+                'xpath': '//*[@id="login_field"]',
+                'input_variable': 'username'
+            },
+            {
+                'type': 'input',
+                'xpath': '//*[@id="password"]',
+                'input_variable': 'password'
+            },
+            {
+                'type': 'button',
+                'xpath': '//*[@id="login"]/form/div[4]/input[9]'
+            }
+        ]
+    }
+]
 ```
 
 
@@ -37,7 +63,7 @@ WOLF_APPID = 'YourAppID'
 - [ ] test all commands on mac/linux
 - [x] add command jarvis google xyz
 - [x] add command jarvis youtube xyz
-- [ ] add the ability to automatically login to websites. This will use Selenium and the auto install libraries for chrome/firefox drivers. Will need to create a class or set of functions that will allow me to setup multiple different logins with out hard coding each one. For example it would take input that tells the funtion where the xpath for the login form, username/email field, password field, submit button, etc is located. This configuration should all be in the config.py file.
+- [x] add the ability to automatically login to websites. This will use Selenium and the auto install libraries for chrome/firefox drivers. Will need to create a class or set of functions that will allow me to setup multiple different logins with out hard coding each one. For example it would take input that tells the funtion where the xpath for the login form, username/email field, password field, submit button, etc is located. This configuration should all be in the config.py file.
 - [x] add ability to search wolframalpha
 - [x] add an ability to do a general search where jarvis will find a result from either, wolframalpha, wikipedia, or google to answer your question.
 - [x] jarvis how do you spell "xyz" > output "you spell xyz like: x y z"

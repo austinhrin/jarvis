@@ -8,6 +8,7 @@ __pycache__/
 debug.log
 *.OLD
 *.exe
+*.log
 
 config.py
 

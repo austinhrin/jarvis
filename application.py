@@ -6,13 +6,11 @@ import re
 ### pip installed dependancies
 import pyttsx3
 import speech_recognition as sr
-#import geckodriver_autoinstaller #https://pypi.org/project/geckodriver-autoinstaller/
-#import chromedriver_autoinstaller #https://pypi.org/project/chromedriver-autoinstaller/
 
 ### user created dependancies
 from config import MASTER, tts_voice_rate
-from modules.open import open_url
-from modules import volume, search
+from modules.open import open_url, auto_login
+from modules import volume, search, helpers
 
 
 # text to speech
@@ -72,22 +70,25 @@ while True:
     # wait for user to speak and say Jarvis... xyz
     query = listen()
     if query != None:
+        # convert what is said to lowercase
+        # to make life with if statements easier
         query = query.lower()
     if query != None and 'jarvis' in query:
         # when user asks Jarvis a question then run if checks
         if 'hello jarvis' in query:
             greet_master()
         elif 'search' in query or 'what is' in query:
-            head, sep, tail = query.partition('search')
+            # remove name of command and get search term
+            search_term = helpers.string_after(query, 'search')
             # try search wolframalpha
-            wolf_response = search.wolf(tail)
+            wolf_response = search.wolf(search_term)
             if 'could not find' in wolf_response:
                 # then wikipedia
-                wiki_response = search.wiki(tail)
+                wiki_response = search.wiki(search_term)
                 if 'could not find' in wiki_response:
                     # else search google
-                    speak(f'Could not find {tail} on Wolfram Alpha or Wikipedia opening Google.')
-                    open_url(f'google.com/search?q={tail}')
+                    speak(f'Could not find {search_term} on Wolfram Alpha or Wikipedia opening Google.')
+                    open_url(f'google.com/search?q={search_term}')
                 else:
                     print(wiki_response)
                     speak(wiki_response)
@@ -95,26 +96,38 @@ while True:
                 print(wolf_response)
                 speak(wolf_response)
             print('not available yet.')
+        elif 'loginto' in helpers.remove_spaces(query):
+            # remove name of command and get search term
+            if 'login to' in query:
+                search_term = helpers.string_after(query, 'login to')
+            elif 'log into' in query:
+                search_term = helpers.string_after(query, 'log into')
+            # open and login to the website
+            auto_login(search_term)
         elif 'google' in query:
-            head, sep, tail = query.partition('google')
-            speak(f'Searching Google for {tail}')
-            open_url(f'google.com/search?q={tail}')
+            # remove name of command and get search term
+            search_term = helpers.string_after(query, 'google')
+            speak(f'Searching Google for {search_term}')
+            open_url(f'google.com/search?q={search_term}')
         elif 'youtube' in query:
-            head, sep, tail = query.partition('youtube')
-            speak(f'Searching YouTube for {tail}')
-            open_url(f'youtube.com/results?search_query={tail}')
-        elif 'wolfram alpha' in query or 'wolframalpha' in query:
-            # search wolframalpha
+            # remove name of command and get search term
+            search_term = helpers.string_after(query, 'youtube')
+            speak(f'Searching YouTube for {search_term}')
+            open_url(f'youtube.com/results?search_query={search_term}')
+        elif 'wolframalpha' in helpers.remove_spaces(query):
+            # remove name of command and get search term
             if 'wolfram alpha' in query:
-                head, sep, tail = query.partition('wolfram alpha')
+                search_term = helpers.string_after(query, 'wolfram alpha')
             elif 'wolframalpha' in query:
-                head, sep, tail = query.partition('wolframalpha')
-            response = search.wolf(tail)
+                search_term = helpers.string_after(query, 'wolframalpha')
+            # search wolframalpha
+            response = search.wolf(search_term)
             print(response)
             speak(response)
         elif 'wikipedia' in query:
-            head, sep, tail = query.partition('wikipedia')
-            response = search.wiki(tail)
+            # remove name of command and get search term
+            search_term = helpers.string_after(query, 'wikipedia')
+            response = search.wiki(search_term)
             print(response)
             speak(response)
         elif 'open' in query:

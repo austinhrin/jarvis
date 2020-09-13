@@ -79,8 +79,10 @@ login = [
 - [ ] ability to have multiple to do lists.
 - [x] countdown timer
 - [ ] alarm clock
+- [ ] check grammar of copied text?
 - [ ] turn into a kivy application so Jarvis can be mobile!
 - [ ] create a ui/visual that responds to voice input and that reacts to jarvis speaking. kind of like a spectrum analyzer
 - [ ] figure out how to monetize the kivy mobile application. text ads, video ads, audio ads???
 - [ ] analytics for mobile app???
 - [ ] create automated tests that will test all the commands?
+- [ ] create new rows in xls files with jarvis. use pandas or openpyxl? commands: open xls, close xls, add row to xls

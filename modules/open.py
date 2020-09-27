@@ -2,6 +2,7 @@
 import webbrowser
 from time import sleep
 import random
+from datetime import datetime
 
 ### pip installed dependancies
 # https://pypi.org/project/webdriver-manager/
@@ -12,6 +13,7 @@ from selenium.webdriver.chrome.options import Options as coptions
 from selenium.webdriver.firefox.options import Options as foptions
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+import pandas as pd
 
 ### user created dependancies
 from config import login, selenium_browser
@@ -51,3 +53,29 @@ def auto_login(name):
             except:
                 found = 'Error'
     return found
+
+
+# file should contain the path to the file as well as the name.
+def open_xls(file):
+    df = pd.read_excel(file)
+    return df
+
+
+def add_row_xls(df, new_row):
+    #new_row = {'Done?': False, 'Description':'Do things.', 'Date Added':datetime.now()}
+    df.append(new_row, ignore_index=True)
+    return df
+
+
+def save_xls(df, file):
+    try:
+        writer = pd.ExcelWriter(file)
+        df.to_excel(writer)
+        writer.save()
+        return f'Saved file {file}'
+    except:
+        return f'Failed to write data to file {file}'
+
+#df = open_xls('./spreadsheets/todo.xlsx')
+#new_row = {'Done?': False, 'Description':'Do things.', 'Date Added':datetime.now()}
+#add_row_xls(df, new_row)

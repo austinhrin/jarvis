@@ -21,6 +21,9 @@ tts.setProperty('rate',tts_voice_rate)
 
 JARVIS = JARVIS.lower()
 
+timer_time = 0
+timer_duration = 0
+
 def speak(text):
     tts.say(text)
     tts.runAndWait()
@@ -60,18 +63,11 @@ def sendEmail(to, content):
     server.close()
 '''
 
-
-# main program
-print(f'Initializing {JARVIS}...')
-speak(f'Initializing {JARVIS}...')
-greet_master()
-speak(f'I am {JARVIS}. How may I help you today?')
-
-
-timer_time = 0
-timer_duration = 0
-
-while True:
+def main_loop():
+    global timer_duration
+    global timer_time
+    timer_duration = timer_duration
+    timer_time = timer_time
     # wait for user to speak and say Jarvis... xyz
     query = listen()
     if query != None:
@@ -84,7 +80,10 @@ while True:
             greet_master()
         elif 'search' in query or 'what is' in query:
             # remove name of command and get search term
-            search_term = helpers.string_after(query, 'search')
+            try:
+                search_term = helpers.string_after(query, 'search')
+            except:
+                search_term = helpers.string_after(query, 'what is')
             # try search wolframalpha
             wolf_response = search.wolf(search_term)
             if 'could not find' in wolf_response:
@@ -100,7 +99,6 @@ while True:
             else:
                 print(wolf_response)
                 speak(wolf_response)
-            print('not available yet.')
         elif 'loginto' in helpers.remove_spaces(query):
             # remove name of command and get search term
             if 'login to' in query:
@@ -113,17 +111,17 @@ while True:
                 speak(f'Logged into {search_term}')
             else:
                 speak(f'Was not able to login to {search_term}')
-        elif 'google' in query:
+        elif 'google' in query and 'open' not in query:
             # remove name of command and get search term
             search_term = helpers.string_after(query, 'google')
             speak(f'Searching Google for {search_term}')
             open_url(f'google.com/search?q={search_term}')
-        elif 'youtube' in query:
+        elif 'youtube' in query and 'open' not in query:
             # remove name of command and get search term
             search_term = helpers.string_after(query, 'youtube')
             speak(f'Searching YouTube for {search_term}')
             open_url(f'youtube.com/results?search_query={search_term}')
-        elif 'wolframalpha' in helpers.remove_spaces(query):
+        elif 'wolframalpha' in helpers.remove_spaces(query) and 'open' not in query:
             # remove name of command and get search term
             if 'wolfram alpha' in query:
                 search_term = helpers.string_after(query, 'wolfram alpha')
@@ -133,7 +131,7 @@ while True:
             response = search.wolf(search_term)
             print(response)
             speak(response)
-        elif 'wikipedia' in query:
+        elif 'wikipedia' in query and 'open' not in query:
             # remove name of command and get search term
             search_term = helpers.string_after(query, 'wikipedia')
             response = search.wiki(search_term)
@@ -208,9 +206,10 @@ while True:
                 speak('Unmuting volume...')
                 volume.unmute()
                 speak('Volume has been unmuted!')
-        elif 'shut down' in query:
+        elif 'shutdown' in helpers.remove_spaces(query):
             speak(f'Shutting down... Good bye {MASTER}.')
-            break
+            #break
+            return 'break'
     # check if there is a timer
     if timer_duration != 0:
         done = time.check_time_elapsed(timer_time, timer_duration)
@@ -220,3 +219,13 @@ while True:
             speak(f'Your timer for {hour} hours {minutes} minutes and {seconds} seconds is up!')
             timer_time = 0
             timer_duration = 0
+
+if __name__ == '__main__':
+    print(f'Initializing {JARVIS}...')
+    speak(f'Initializing {JARVIS}...')
+    greet_master()
+    speak(f'I am {JARVIS}. How may I help you today?')
+    while True:
+        a = main_loop()
+        if a == 'break':
+            break

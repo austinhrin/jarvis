@@ -1,5 +1,27 @@
 # J.A.R.V.I.S.
 
+
+# Building apk from Windows 10
+- Setup Windows Subsystem for Linux https://docs.microsoft.com/en-us/windows/wsl/install-win10
+- ~~Install the Remote - WSL plugin for vscode~~
+- Now open WSL
+- Navigate to the folder with your code example: `cd /mnt/c/users/austin/desktop/non_web_apps/jarvis`
+- Create a virtual enivronment using `python3 venv venvWSL`
+- Activate venv `source venvWSL/bin/activate`
+- Run these commands (copied from https://buildozer.readthedocs.io/en/latest/installation.html#targeting-android):
+```
+pip3 install --upgrade buildozer
+sudo apt update
+sudo apt install -y git zip unzip openjdk-8-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+pip3 install --user --upgrade Cython==0.29.19 virtualenv  # the --user should be removed if you do this in a venv
+
+# add the following line at the end of your ~/.bashrc file
+export PATH=$PATH:~/.local/bin/
+```
+- `buildozer init`
+- `buildozer -v android debug`
+- to send and run on your android device `buildozer android debug deploy run`
+
 # Available voice commands
 You need to include jarvis in every command so jarvis knows you want it to do something.
 
@@ -85,4 +107,6 @@ login = [
 - [ ] figure out how to monetize the kivy mobile application. text ads, video ads, audio ads???
 - [ ] analytics for mobile app???
 - [ ] create automated tests that will test all the commands?
-- [ ] create new rows in xls files with jarvis. use pandas or openpyxl? commands: open xls, close xls, add row to xls
+- [ ] create new rows in xls files with jarvis. use pandas or openpyxl? commands: open spreadsheet, close spreadsheet, add row to file
+- [ ] Hook up google calanader and hav Jarvis tell teh user when they have their next meeting, or the next thing on their schedule 5/10 minutes before it starts. Time Jarvis says it at can be a variable in config.py
+- [ ] Ability to ask Jarvis how much battery percentage is left on your device (phone, laptop, etc)
